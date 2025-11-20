@@ -16,10 +16,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "user_id",nullable = false)
     private Long userId;
 
     @Column(nullable = false, unique = true)
@@ -63,6 +62,9 @@ public class User {
 
     @Column(name = "locked_at")
     private LocalDateTime lockedAt;
+
+    @Column(name = "is_lock")
+    private Boolean isLock = false;
 
     // Relationships
 
