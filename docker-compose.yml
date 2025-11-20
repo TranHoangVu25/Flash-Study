@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_language
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: language_practice
+      TZ: Asia/Ho_Chi_Minh
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - language_net
+
+  adminer:
+    image: adminer
+    container_name: adminer_language
+    restart: always
+    ports:
+      - "8081:8080"   # Truy cập Adminer tại http://localhost:8081
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    networks:
+      - language_net
+
+volumes:
+  postgres_data:
+
+networks:
+  language_net:
