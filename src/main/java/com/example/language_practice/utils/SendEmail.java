@@ -1,6 +1,6 @@
 package com.example.language_practice.utils;
 
-import com.chikawa.user_service.services.EmailService;
+import com.example.language_practice.services.EmailService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,7 +15,7 @@ public class SendEmail {
     EmailService emailService;
 
     public void sendEmailRegister(String confirmToken, String email) {
-        String link = "http://localhost:8085/api/v1/auth/confirm?token=" + confirmToken;
+        String link = "http://localhost:8000/api/v1/auth/confirm?token=" + confirmToken;
 
         String htmlContent =
                 "<div style='font-family:Arial, sans-serif; line-height:1.6; padding:20px; color:#333;'>"

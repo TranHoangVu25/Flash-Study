@@ -3,6 +3,7 @@ package com.example.language_practice.services;
 import com.example.language_practice.dto.ForgotPasswordDTO;
 import com.example.language_practice.dto.request.AuthenticationRequest;
 import com.example.language_practice.dto.request.IntrospectRequest;
+import com.example.language_practice.dto.request.UserCreationRequest;
 import com.example.language_practice.dto.response.ApiResponse;
 import com.example.language_practice.dto.response.AuthenticationResponse;
 import com.example.language_practice.dto.response.IntrospectResponse;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
@@ -193,6 +195,68 @@ public class AuthenticationService {
     public boolean checkPassword(String rawPassword,String hashPassword){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.matches(rawPassword,hashPassword);
+    }
+
+    public ResponseEntity<ApiResponse<String>> registerUser(UserCreationRequest request) {
+        //kiểm tra user đã tồn tại ch = email
+        if (userRepository.existsByEmail(request.getEmail())){
+            User user_existing = userRepository.findByEmail(request.getEmail())
+                    .orElse(null);
+
+            //nếu user đã tồn tại nhưng chưa được confirm thì resend email
+            if (user_existing.getConfirmationAt() == null) {
+                String confirm_token = UUID.randomUUID().toString();
+
+                user_existing.setConfirmationToken(confirm_token);
+                user_existing.setConfirmationSentAt(LocalDateTime.now());
+
+                userRepository.save(user_existing);
+
+                sendEmail.sendEmailRegister(confirm_token,request.getEmail());
+
+                return ResponseEntity.ok()
+                        .body(
+                                ApiResponse.<String>builder()
+                                        .message("Resend successfully!")
+                                        .build()
+                        );
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(
+                            ApiResponse.<String>builder()
+                                    .code(ErrorCode.USER_EXISTED.getCode())
+                                    .message(ErrorCode.USER_EXISTED.getMessage())
+                                    .build()
+                    );
+        }
+        String confirmToken = UUID.randomUUID().toString();
+        String jit = UUID.randomUUID().toString();
+
+        //mã hóa mật khẩu
+        String password = passwordEncoder.encode(request.getPassword());
+
+        User user = new User().builder()
+                .email(request.getEmail())
+                .fullName(request.getFullName())
+                .password(password)
+                .confirmationToken(confirmToken)
+                .confirmationSentAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .role(request.getRole())
+                .signInCount(0)
+                .build();
+
+        userRepository.save(user);
+
+        //method gửi email
+        sendEmail.sendEmailRegister(confirmToken,user.getEmail());
+
+        return ResponseEntity.ok(
+                ApiResponse.<String>builder()
+                        .message("Verification email sent. Please check your inbox.")
+                        .build()
+        );
     }
 
     public ResponseEntity<ApiResponse<String>> forgotPassWord(ForgotPasswordDTO forgotPasswordDTO) {

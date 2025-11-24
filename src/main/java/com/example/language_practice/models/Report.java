@@ -14,9 +14,11 @@ public class Report {
     @Column(name = "report_id")
     private Long reportId;
 
-    private String type;
+    private String type; //Error System, Error UI
+
     private String description;
-    private String status;
+
+    private String status; //Resolved, In Process, Not Resolved
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

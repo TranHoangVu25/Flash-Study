@@ -7,6 +7,7 @@ import com.example.language_practice.exception.ErrorCode;
 import com.example.language_practice.models.User;
 import com.example.language_practice.repositories.UserRepository;
 import com.example.language_practice.services.UserService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -118,5 +119,33 @@ public class UserServiceImpl implements UserService {
                                 .message("Deleted user successfully!")
                                 .build()
                 );
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<ApiResponse<String>> confirmUser(String token) {
+        User user = userRepository.findByConfirmationToken(token)
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.<String>builder()
+                            .code(ErrorCode.INVALID_TOKEN.getCode())
+                            .message("Invalid or expired token")
+                            .build());
+        }
+
+        user.setCreatedAt(LocalDateTime.now());
+//        user.setConfirmationToken(token);
+        user.setUpdatedAt(LocalDateTime.now());
+        user.setConfirmationAt(LocalDateTime.now());
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok(
+                ApiResponse.<String>builder()
+                        .message("Account confirmed successfully")
+                        .build()
+        );
     }
 }

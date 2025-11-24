@@ -18,4 +18,7 @@ public interface UserService {
     ResponseEntity<ApiResponse<User>> updateUser(UserUpdateRequest request,Long userId);
 
     ResponseEntity<ApiResponse<String>> deleteUser(Long userId);
+
+    ResponseEntity<ApiResponse<String>> confirmUser(String token);
+
 }
