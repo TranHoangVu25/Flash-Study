@@ -1,5 +1,6 @@
 package com.example.language_practice.configuration;
 
+import com.example.language_practice.utils.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +40,7 @@ public class SecurityConfig {
     AuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, JwtAuthFilter jwtAuthFilter) throws Exception {
         httpSecurity.authorizeHttpRequests(
                         request ->
                                 request
@@ -62,7 +63,8 @@ public class SecurityConfig {
 //                    oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
 //                    );
         httpSecurity
-                .addFilterBefore(new JwtSessionFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new JwtSessionFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2ResourceServer(oauth2 ->
                                 oauth2.jwt(jwtConfigurer ->
                                                 jwtConfigurer.decoder(customJwtDecoder)
@@ -72,6 +74,7 @@ public class SecurityConfig {
                         //k có quyền truy cập đều phải quay trở về form login
 
                 );
+
         httpSecurity.cors(withDefaults());
 
 

@@ -11,7 +11,9 @@ import java.util.List;
 public interface ReportService {
     ResponseEntity<ApiResponse<List<Report>>> getReports();
 
-    ResponseEntity<ApiResponse<Report>> createReport(Report report);
+    ResponseEntity<ApiResponse<List<Report>>> getReportByUserId(Long userId);
+
+    ResponseEntity<ApiResponse<Report>> createReport(Long userId,Report report);
 
     ResponseEntity<ApiResponse<Report>> updateReport(Report report, Long reportId);
 
