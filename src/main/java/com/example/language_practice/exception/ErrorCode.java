@@ -14,7 +14,9 @@ public enum ErrorCode {
     ACCOUNT_PASSWORD_NOT_CORRECT(1009,"Email or password is incorrect",HttpStatus.BAD_REQUEST),
     REPORT_NOT_EXISTED(1010,"Report is not existed",HttpStatus.BAD_REQUEST),
     STUDY_SET_NOT_EXISTED(1005,"Study Set is not existed",HttpStatus.NOT_FOUND),
-    CARD_NOT_EXISTED(1005,"Card is not existed",HttpStatus.NOT_FOUND),
+    CARD_NOT_EXISTED(1006,"Card is not existed",HttpStatus.NOT_FOUND),
+    ACHIEVEMENT_NOT_EXISTED(1007,"Achievement is not existed",HttpStatus.NOT_FOUND),
+    ACHIEVEMENT_EXISTED(1008,"Achievement is existed",HttpStatus.NOT_FOUND),
 
     ;
     private int code;
