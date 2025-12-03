@@ -1,5 +1,6 @@
 package com.example.language_practice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,6 +48,7 @@ public class StudySet {
     // Người tạo set
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore //thêm vào để tránh vòng lặp vô tận
     private User user;
 
     // Các thẻ card trong set
