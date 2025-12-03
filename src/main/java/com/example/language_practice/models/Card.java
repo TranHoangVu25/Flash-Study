@@ -1,11 +1,13 @@
 package com.example.language_practice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -27,11 +29,11 @@ public class Card {
     @Column(name = "back_text", columnDefinition = "TEXT")
     private String backText;
 
-    // Lưu ý: DB để time(7), Java dùng LocalTime
     @Column(name = "created_at")
-    private LocalTime createdAt;
+    private LocalDateTime createdAt;
 
-    private Integer numerical; // Thứ tự sắp xếp card
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Column(name = "front_language")
     private String frontLanguage;
@@ -41,5 +43,6 @@ public class Card {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "set_id", nullable = false)
+    @JsonIgnore
     private StudySet studySet;
 }
