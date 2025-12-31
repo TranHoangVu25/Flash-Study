@@ -9,7 +9,6 @@ import com.example.language_practice.dto.response.ApiResponse;
 import com.example.language_practice.dto.response.AuthenticationResponse;
 import com.example.language_practice.dto.response.IntrospectResponse;
 import com.example.language_practice.exception.ErrorCode;
-import com.example.language_practice.models.User;
 import com.example.language_practice.services.AuthenticationService;
 import com.example.language_practice.services.UserService;
 import com.nimbusds.jose.JOSEException;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
